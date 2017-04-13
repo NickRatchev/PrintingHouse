@@ -11,7 +11,7 @@ namespace PrintingHouse.Data
         public PrintingHouseContext()
             : base("name=PrintingHouseContext")
         {
-            //Database.SetInitializer(new DropCreateDatabaseAlways<PrintingHouseContext>());
+            Database.SetInitializer(new DropCreateDatabaseAlways<PrintingHouseContext>());
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -33,5 +33,8 @@ namespace PrintingHouse.Data
         public virtual DbSet<WischwasserPrice> WischwasserPrices { get; set; }
         public virtual DbSet<FoilPrice> FoilPrices { get; set; }
         public virtual DbSet<TapePrice> TapePrices { get; set; }
+        public virtual DbSet<MaterialConsumption> MaterialConsumptions { get; set; }
+        public virtual DbSet<SetupWaste> SetupWastes { get; set; }
+        public virtual DbSet<ServicePrice> ServicePrices { get; set; }
     }
 }

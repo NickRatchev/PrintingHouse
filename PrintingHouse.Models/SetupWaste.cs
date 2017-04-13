@@ -12,5 +12,7 @@
         public decimal Value2 { get; set; }
         public int Key3 { get; set; }
         public decimal Value3 { get; set; }
+        public int Key4 { get; set; }
+        public decimal Value4 { get; set; }
     }
 }

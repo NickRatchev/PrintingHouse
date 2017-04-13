@@ -64,7 +64,7 @@ VALUES
 	('2016-10-01', 0.0081, 5),
 	('2017-04-02', 0.0072, 5);
 	
-	INSERT INTO MateialConsumption
+	INSERT INTO MaterialConsumptions
 VALUES
     ('2017-01-01', 280, 395, 2.5, 6, 0.0094, 0.63, 0.01, 0.026, 0.0105);
 	
@@ -72,7 +72,7 @@ VALUES
 VALUES
     ('2017-01-01', 3.25, 215, 0.029, 0.182);
 	
-	INSERT INTO SetupWaste
+	INSERT INTO SetupWastes
 VALUES
     ('2017-01-01', 480000, 4, 1500000, 5.5, 2000000, 4, 8000000, 1.5);
 	
