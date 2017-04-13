@@ -76,10 +76,10 @@ VALUES
 VALUES
     ('2017-01-01', 480000, 4, 1500000, 5.5, 2000000, 4, 8000000, 1.5);
 	
-	
-	
-	
-	
-	
-	
-	
+	INSERT INTO Towns
+VALUES
+    ('Sofia'),
+    ('Blagoevgrad'),
+    ('Dupnitsa'),
+    ('Plovdiv'),
+    ('Vratsa');

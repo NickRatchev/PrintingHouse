@@ -8,6 +8,7 @@
 
         [Required]
         public string Title { get; set; }
+        public decimal Discount { get; set; }
         public int ClientId { get; set; }
         public virtual Client Client { get; set; }
     }

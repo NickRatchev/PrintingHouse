@@ -65,6 +65,7 @@
     <Compile Include="SetupWaste.cs" />
     <Compile Include="TapePrice.cs" />
     <Compile Include="Town.cs" />
+    <Compile Include="WebSize.cs" />
     <Compile Include="WischwasserPrice.cs" />
   </ItemGroup>
   <ItemGroup>

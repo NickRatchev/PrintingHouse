@@ -17,6 +17,22 @@ namespace PrintingHouse.Data
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Properties<decimal>().Configure(c => c.HasPrecision(18, 6));
+
+            modelBuilder.Entity<Product>()
+                .HasRequired(p=>p.Client)
+                .WithMany(c=>c.Products)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<MachineData>()
+                .HasRequired(m=>m.Web1)
+                .WithMany()
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<MachineData>()
+                .HasRequired(m => m.Web2)
+                .WithMany()
+                .WillCascadeOnDelete(false);
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -26,6 +42,7 @@ namespace PrintingHouse.Data
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<Component> Components { get; set; }
         public virtual DbSet<MachineData> MachineData { get; set; }
+        public virtual DbSet<WebSize> WebSizes { get; set; }
         public virtual DbSet<Paper> Papers { get; set; }
         public virtual DbSet<PaperPrice> PaperPrices { get; set; }
         public virtual DbSet<PlatePrice> PlatePrices { get; set; }

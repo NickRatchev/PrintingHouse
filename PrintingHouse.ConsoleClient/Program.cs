@@ -7,6 +7,8 @@
         static void Main()
         {
             Utility.InitializeDatabase();
+
+
         }
     }
 }
