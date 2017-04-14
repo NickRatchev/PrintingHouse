@@ -20,7 +20,7 @@ namespace PrintingHouse.ConsoleClient
                 string productTitle = "Capital Daily";
                 int issue = 52;
                 var date = DateTime.Parse("2017-04-12");
-                int printRun = 25000;
+                int printRun = 70000;
                 decimal paperGrammage = 42.5m;
                 var paper = context.Papers.FirstOrDefault(p => p.Grammage == paperGrammage);
                 // End Order Data
@@ -39,11 +39,11 @@ namespace PrintingHouse.ConsoleClient
                 context.SaveChanges();
 
                 // Component Data
-                byte pages = 48;
-                byte Pairs4Color = 6;
-                byte Pairs3Color = 6;
-                byte Pairs2Color = 6;
-                byte Pairs1Color = 6;
+                byte pages = 56;
+                byte Pairs4Color = 14;
+                byte Pairs3Color = 0;
+                byte Pairs2Color = 0;
+                byte Pairs1Color = 14;
                 var machineData = context.MachineData.FirstOrDefault(m => m.NumberOfPages == pages);
                 // End Component Data
 

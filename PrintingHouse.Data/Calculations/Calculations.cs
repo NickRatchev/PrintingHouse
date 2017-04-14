@@ -196,11 +196,14 @@ namespace PrintingHouse.Data.Calculations
                 foreach (var component in components)
                 {
                     DateTime date = component.Order.Date;
+                    int productionFactor = component.MachineData.ProductionFactor;
+                    int printRunChangeFactor = 1 + component.Order.PrintRun / (productionFactor * 125200);
                     var materialConsumption = MaterialStore.GetMaterialConsumptionByDate(date);
                     int numberOfPages = component.MachineData.NumberOfPages * component.Order.PrintRun;
 
-                    numberOfPlates = component.Pairs4Color * 4 + component.Pairs3Color * 3
-                                     + component.Pairs2Color * 2 + component.Pairs1Color;
+                    numberOfPlates = (component.Pairs4Color * 4 + component.Pairs3Color * 3
+                                     + component.Pairs2Color * 2 + component.Pairs1Color)
+                                     * productionFactor * printRunChangeFactor;
                 }
 
                 return numberOfPlates;
@@ -216,10 +219,13 @@ namespace PrintingHouse.Data.Calculations
                 foreach (var component in components)
                 {
                     DateTime date = component.Order.Date;
+                    int productionFactor = component.MachineData.ProductionFactor;
                     var materialConsumption = MaterialStore.GetMaterialConsumptionByDate(date);
                     int numberOfPages = component.MachineData.NumberOfPages * component.Order.PrintRun;
 
-                    numberOfBlinds = component.Pairs3Color + component.Pairs2Color * 2 + component.Pairs1Color * 3;
+                    numberOfBlinds = (component.Pairs3Color + component.Pairs2Color * 2
+                                     + component.Pairs1Color * 3)
+                                     * productionFactor;
                 }
 
                 return numberOfBlinds;
