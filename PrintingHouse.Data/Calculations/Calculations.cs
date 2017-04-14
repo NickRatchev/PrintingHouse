@@ -10,7 +10,7 @@ namespace PrintingHouse.Data.Calculations
 {
     public static class Calculations
     {
-        public static decimal GetPaperKg(ICollection<Component> components)
+        public static decimal CalculatePaperKg(ICollection<Component> components)
         {
             using (var context = new PrintingHouseContext())
             {
@@ -24,7 +24,7 @@ namespace PrintingHouse.Data.Calculations
                     int numberOfPages = pressRun * component.MachineData.NumberOfPages;
                     var paper = component.Order.Paper;
                     decimal pageArea = materialConsumption.PageWidth * materialConsumption.PageHeight;
-                    decimal totalArea = numberOfPages * pageArea / (2 * 1000000);
+                    decimal totalArea = numberOfPages * pageArea / (2 * 1000000);               // 2 * 1000000 because 1 sheet has 2 pages
                     paperKg += totalArea * paper.Grammage / 1000;
                 }
 
@@ -32,7 +32,7 @@ namespace PrintingHouse.Data.Calculations
             }
         }
 
-        public static decimal GetPaperWasteKg(ICollection<Component> components)
+        public static decimal CalculatePaperWasteKg(ICollection<Component> components)
         {
             using (var context = new PrintingHouseContext())
             {
@@ -70,7 +70,7 @@ namespace PrintingHouse.Data.Calculations
 
                     decimal wasteNumberOfPages = 16800 + numberOfPages * wastePercentage / 100;
                     decimal pageArea = materialConsumption.PageWidth * materialConsumption.PageHeight;
-                    decimal totalArea = wasteNumberOfPages * pageArea / (2 * 1000000);
+                    decimal totalArea = wasteNumberOfPages * pageArea / (2 * 1000000);          // 2 * 1000000 because 1 sheet has 2 pages
                     setupWasteKg += totalArea * paper.Grammage / 1000;
                     if (setupWasteKg > 230)
                     {
@@ -80,11 +80,149 @@ namespace PrintingHouse.Data.Calculations
                     setupWasteKg += secondMachineKg;
                 }
 
-                decimal paperKg = GetPaperKg(components);
+                decimal paperKg = CalculatePaperKg(components);
                 decimal printingWasteKg = paperKg * paperWaste.PrintingWaste / 100;
                 decimal coreWasteKg = (paperKg + setupWasteKg + printingWasteKg) * paperWaste.CoreWaste / 100;
 
                 return (setupWasteKg + printingWasteKg + coreWasteKg);
+            }
+        }
+
+        public static decimal CalculateBlackInkKg(ICollection<Component> components)
+        {
+            using (var context = new PrintingHouseContext())
+            {
+                decimal blackInkKg = 0;
+
+                foreach (var component in components)
+                {
+                    DateTime date = component.Order.Date;
+                    var materialConsumption = MaterialStore.GetMaterialConsumptionByDate(date);
+                    int numberOfPages = component.MachineData.NumberOfPages * component.Order.PrintRun;
+
+                    blackInkKg += numberOfPages * materialConsumption.InkBlack / 1000;
+                }
+
+                return blackInkKg;
+            }
+        }
+
+        public static decimal CalculateColorInkKg(ICollection<Component> components)
+        {
+            using (var context = new PrintingHouseContext())
+            {
+                decimal colorInkKg = 0;
+
+                foreach (var component in components)
+                {
+                    DateTime date = component.Order.Date;
+                    var materialConsumption = MaterialStore.GetMaterialConsumptionByDate(date);
+                    int numberOfPages = component.MachineData.NumberOfPages * component.Order.PrintRun;
+                    int printRun = component.Order.PrintRun;
+
+                    int totalNumberOfColorPages = printRun * (component.Pairs4Color * 2 * 3
+                                                  + component.Pairs3Color * 2 * 4 + component.Pairs2Color * 2 * 2);
+
+                    colorInkKg += totalNumberOfColorPages * materialConsumption.InkColor / 1000;
+                }
+
+                return colorInkKg;
+            }
+        }
+
+        public static decimal CalculateWischwasserKg(ICollection<Component> components)
+        {
+            using (var context = new PrintingHouseContext())
+            {
+                decimal wischwasserKg = 0;
+
+                foreach (var component in components)
+                {
+                    DateTime date = component.Order.Date;
+                    var materialConsumption = MaterialStore.GetMaterialConsumptionByDate(date);
+                    int numberOfPages = component.MachineData.NumberOfPages * component.Order.PrintRun;
+
+                    wischwasserKg += numberOfPages * materialConsumption.Wischwasser / 1000;
+                }
+
+                return wischwasserKg;
+            }
+        }
+
+        public static decimal CalculateFoilKg(ICollection<Component> components)
+        {
+            using (var context = new PrintingHouseContext())
+            {
+                decimal foilKg = 0;
+
+                foreach (var component in components)
+                {
+                    DateTime date = component.Order.Date;
+                    var materialConsumption = MaterialStore.GetMaterialConsumptionByDate(date);
+                    int numberOfPages = component.MachineData.NumberOfPages * component.Order.PrintRun;
+
+                    foilKg += numberOfPages * materialConsumption.Foil / 1000;
+                }
+
+                return foilKg;
+            }
+        }
+
+        public static decimal CalculateTapeMeters(ICollection<Component> components)
+        {
+            using (var context = new PrintingHouseContext())
+            {
+                decimal tapeMeters = 0;
+
+                foreach (var component in components)
+                {
+                    DateTime date = component.Order.Date;
+                    var materialConsumption = MaterialStore.GetMaterialConsumptionByDate(date);
+                    int numberOfPages = component.MachineData.NumberOfPages * component.Order.PrintRun;
+
+                    tapeMeters += numberOfPages * materialConsumption.Tape / 1000;
+                }
+
+                return tapeMeters;
+            }
+        }
+
+        public static int CalculatePlates(ICollection<Component> components)
+        {
+            using (var context = new PrintingHouseContext())
+            {
+                int numberOfPlates = 0;
+
+                foreach (var component in components)
+                {
+                    DateTime date = component.Order.Date;
+                    var materialConsumption = MaterialStore.GetMaterialConsumptionByDate(date);
+                    int numberOfPages = component.MachineData.NumberOfPages * component.Order.PrintRun;
+
+                    numberOfPlates = component.Pairs4Color * 4 + component.Pairs3Color * 3
+                                     + component.Pairs2Color * 2 + component.Pairs1Color;
+                }
+
+                return numberOfPlates;
+            }
+        }
+
+        public static int CalculateBlinds(ICollection<Component> components)
+        {
+            using (var context = new PrintingHouseContext())
+            {
+                int numberOfBlinds = 0;
+
+                foreach (var component in components)
+                {
+                    DateTime date = component.Order.Date;
+                    var materialConsumption = MaterialStore.GetMaterialConsumptionByDate(date);
+                    int numberOfPages = component.MachineData.NumberOfPages * component.Order.PrintRun;
+
+                    numberOfBlinds = component.Pairs3Color + component.Pairs2Color * 2 + component.Pairs1Color * 3;
+                }
+
+                return numberOfBlinds;
             }
         }
     }
