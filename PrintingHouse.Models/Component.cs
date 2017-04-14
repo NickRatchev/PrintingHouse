@@ -5,7 +5,6 @@
         public int Id { get; set; }
         public int OrderId { get; set; }
         public int MachineDataId { get; set; }
-        public int PaperId { get; set; }
         public byte Pairs4Color { get; set; }
         public byte Pairs3Color { get; set; }
         public byte Pairs2Color { get; set; }
@@ -14,6 +13,5 @@
 
         public virtual Order Order { get; set; }
         public virtual MachineData MachineData { get; set; }
-        public virtual Paper Paper { get; set; }
     }
 }

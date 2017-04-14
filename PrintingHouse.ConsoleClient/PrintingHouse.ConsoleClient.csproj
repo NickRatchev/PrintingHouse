@@ -64,6 +64,10 @@
       <Project>{d0c7f3a5-9ea9-4953-a89c-49e5c3b68f2e}</Project>
       <Name>PrintingHouse.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PrintingHouse.Models\PrintingHouse.Models.csproj">
+      <Project>{cb21542b-3e7d-495d-a007-7ae55bc09d41}</Project>
+      <Name>PrintingHouse.Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

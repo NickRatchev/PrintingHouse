@@ -11,7 +11,7 @@ namespace PrintingHouse.Data
         public PrintingHouseContext()
             : base("name=PrintingHouseContext")
         {
-            Database.SetInitializer(new DropCreateDatabaseAlways<PrintingHouseContext>());
+            //Database.SetInitializer(new DropCreateDatabaseAlways<PrintingHouseContext>());
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -33,6 +33,10 @@ namespace PrintingHouse.Data
                 .WithMany()
                 .WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<OrderCalcPrice>()
+                .HasRequired(p => p.Order)
+                .WithRequiredDependent(o => o.CalcPrice);
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -40,6 +44,7 @@ namespace PrintingHouse.Data
         public virtual DbSet<Town> Towns { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<OrderCalcPrice> OrderCalcPrices { get; set; }
         public virtual DbSet<Component> Components { get; set; }
         public virtual DbSet<MachineData> MachineData { get; set; }
         public virtual DbSet<WebSize> WebSizes { get; set; }
@@ -51,7 +56,7 @@ namespace PrintingHouse.Data
         public virtual DbSet<FoilPrice> FoilPrices { get; set; }
         public virtual DbSet<TapePrice> TapePrices { get; set; }
         public virtual DbSet<MaterialConsumption> MaterialConsumptions { get; set; }
-        public virtual DbSet<SetupWaste> SetupWastes { get; set; }
+        public virtual DbSet<PaperWaste> PaperWastes { get; set; }
         public virtual DbSet<ServicePrice> ServicePrices { get; set; }
     }
 }
