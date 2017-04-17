@@ -52,7 +52,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Calculations\Calculations.cs" />
+    <Compile Include="MyInitializer.cs" />
     <Compile Include="PrintingHouseContext.cs" />
+    <Compile Include="PrintingHouseDbStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Store\MaterialStore.cs" />
     <Compile Include="Utility.cs" />
