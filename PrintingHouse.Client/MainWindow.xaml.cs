@@ -13,8 +13,8 @@
 
     public partial class MainWindow : Window
     {
-        PrintingHouseDbStore store = new PrintingHouseDbStore();
-        public ObservableCollection<Client> clients = new ObservableCollection<Client>();
+        //PrintingHouseDbStore store = new PrintingHouseDbStore();
+        public ObservableCollection<Client> Clients = new ObservableCollection<Client>();
         public ObservableCollection<Component> components = new ObservableCollection<Component>();
         public ObservableCollection<Order> orders = new ObservableCollection<Order>();
 
@@ -22,19 +22,19 @@
         {
             InitializeComponent();
 
-            store.Initialize();
+            //PrintingHouseDbStore.Initialize();
             //Utility.InitializeDatabase();
 
             // Select tab Orders
-            tabOrders.IsSelected = true;
+            //tabOrders.IsSelected = true;
             // Set mouse cursor in filter TextBox
-            FocusManager.SetFocusedElement(this, txtFilterOrder);
+            //FocusManager.SetFocusedElement(this, txtFilterOrder);
 
-            clients = new ObservableCollection<Client>(store.GetClients());
-            components = new ObservableCollection<Component>(store.GetComponents());
-            orders = new ObservableCollection<Order>(store.GetOrders());
+            Clients = new ObservableCollection<Client>(PrintingHouseDbStore.GetClients());
+            components = new ObservableCollection<Component>(PrintingHouseDbStore.GetComponents());
+            orders = new ObservableCollection<Order>(PrintingHouseDbStore.GetOrders());
 
-            listClients.ItemsSource = clients;
+            listClients.ItemsSource = Clients;
             listOrders.ItemsSource = orders;
 
             CollectionView viewClients = (CollectionView)CollectionViewSource.GetDefaultView(listClients.ItemsSource);
@@ -46,18 +46,29 @@
 
         private void btnAddClient_Click(object sender, RoutedEventArgs e)
         {
+            Client client = new Client()
+            {
+                //CompanyName = "Sample Name",
+                //TownId = 1
+            };
+            
             ClientDataWindow clientDataWindow = new ClientDataWindow();
-            clientDataWindow.Show();
+            clientDataWindow.DataContext = client;
+            PrintingHouseDbStore.context.Clients.Add(client);
+            clientDataWindow.ShowDialog();            
+
+            Clients.Add(client);
+
         }
 
         private void btnEditClient_Click(object sender, RoutedEventArgs e)
         {
-            Button b = sender as Button;
+            //Button b = sender as Button;
             Client client = (Client)((Button)e.Source).DataContext;
 
             ClientDataWindow clientDataWindow = new ClientDataWindow();
             clientDataWindow.DataContext = client;
-            clientDataWindow.Show();
+            clientDataWindow.ShowDialog();            
         }
 
         private void btnCreateNewOrder_Click(object sender, RoutedEventArgs e)
