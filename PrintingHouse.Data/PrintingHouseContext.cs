@@ -2,14 +2,16 @@ using PrintingHouse.Models;
 
 namespace PrintingHouse.Data
 {
+    using System;
     using System.Data.Entity;
+    using System.Linq;
 
     public class PrintingHouseContext : DbContext
     {
         public PrintingHouseContext()
             : base("name=PrintingHouseContext")
         {
-            //Database.SetInitializer(new MyInitializer());
+            //Database.SetInitializer(new DropCreateDatabaseAlways<PrintingHouseContext>());
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

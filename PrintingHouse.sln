@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrintingHouse.Data", "Print
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrintingHouse.ConsoleClient", "PrintingHouse.ConsoleClient\PrintingHouse.ConsoleClient.csproj", "{1232374C-FD29-4C2F-AA98-1DA36E92D4CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrintingHouse.Client", "PrintingHouse.Client\PrintingHouse.Client.csproj", "{8EC637EB-624A-4C1F-A10A-A94AE45B1A0E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{1232374C-FD29-4C2F-AA98-1DA36E92D4CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1232374C-FD29-4C2F-AA98-1DA36E92D4CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1232374C-FD29-4C2F-AA98-1DA36E92D4CE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8EC637EB-624A-4C1F-A10A-A94AE45B1A0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8EC637EB-624A-4C1F-A10A-A94AE45B1A0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8EC637EB-624A-4C1F-A10A-A94AE45B1A0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8EC637EB-624A-4C1F-A10A-A94AE45B1A0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
