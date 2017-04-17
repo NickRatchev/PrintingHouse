@@ -22,8 +22,7 @@
         {
             InitializeComponent();
 
-            //PrintingHouseDbStore.Initialize();
-            //Utility.InitializeDatabase();
+            PrintingHouseDbStore.Initialize();
 
             // Select tab Orders
             //tabOrders.IsSelected = true;

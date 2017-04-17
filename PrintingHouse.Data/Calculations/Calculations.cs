@@ -313,5 +313,37 @@
 
             return packingPrice;
         }
+
+        public static OrderCalcPrice GetOrderCalcPrices(Order order)
+        {
+            OrderCalcPrice calcPrice = new OrderCalcPrice();
+
+            calcPrice.PaperKg = CalculatePaperKg(order.Components);
+            calcPrice.PaperWasteKg = CalculatePaperWasteKg(order.Components);
+            calcPrice.BlackInkKg = CalculateBlackInkKg(order.Components);
+            calcPrice.ColorInksKg = CalculateColorInkKg(order.Components);
+            calcPrice.WischwasserKg = CalculateWischwasserKg(order.Components);
+            calcPrice.FoilKg = CalculateFoilKg(order.Components);
+            calcPrice.TapeMeters = CalculateTapeMeters(order.Components);
+            calcPrice.Plates = CalculatePlates(order.Components);
+            calcPrice.Blinds = CalculateBlinds(order.Components);
+
+            calcPrice.PaperPrice = CalculatePaperPrice(calcPrice.PaperKg, order.Date);
+            calcPrice.PaperWastePrice = CalculatePaperPrice(calcPrice.PaperWasteKg, order.Date);
+            calcPrice.BlackInkPrice = CalculateBlackInkPrice(calcPrice.BlackInkKg, order.Date);
+            calcPrice.ColorInksPrice = CalculateColorInkPrice(calcPrice.ColorInksKg, order.Date);
+            calcPrice.WischwasserPrice = CalculateWischwasserPrice(calcPrice.WischwasserKg, order.Date);
+            calcPrice.FoilPrice = CalculateFoilPrice(calcPrice.FoilKg, order.Date);
+            calcPrice.TapePrice = CalculateTapePrice(calcPrice.TapeMeters, order.Date);
+            calcPrice.PlatesPrice = CalculatePlatesPrice(calcPrice.Plates, order.Date);
+            calcPrice.BlindsPrice = CalculateBlindsPrice(calcPrice.Blinds, order.Date);
+
+            calcPrice.PlateExposingPrice = CalculatePlatesExposingPrice(calcPrice.Plates, order.Date);
+            calcPrice.MachineSetupPrice = CalculateMachineSetupPrice(order.Components);
+            calcPrice.PrintingPrice = CalculatePrintingPrice(order.Components);
+            calcPrice.PackingPrice = CalculatePackingPrice(order.Components);
+
+            return calcPrice;
+        }
     }
 }

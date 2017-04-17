@@ -10,8 +10,8 @@
         public decimal WischwasserKg { get; set; }
         public decimal FoilKg { get; set; }
         public decimal TapeMeters { get; set; }
-        public byte Plates { get; set; }
-        public byte Blinds { get; set; }
+        public int Plates { get; set; }
+        public int Blinds { get; set; }
 
         public decimal PaperPrice { get; set; }
         public decimal PaperWastePrice { get; set; }
