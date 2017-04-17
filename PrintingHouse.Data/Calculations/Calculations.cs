@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PrintingHouse.Data.Store;
-using PrintingHouse.Models;
-
-namespace PrintingHouse.Data.Calculations
+﻿namespace PrintingHouse.Data
 {
+    using Models;
+    using Store;
+    using System;
+    using System.Collections.Generic;
+
     public static class Calculations
     {
         public static decimal CalculatePaperKg(ICollection<Component> components)

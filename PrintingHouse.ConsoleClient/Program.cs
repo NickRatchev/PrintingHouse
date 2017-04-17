@@ -1,11 +1,9 @@
-﻿using System;
-using System.Linq;
-using PrintingHouse.Data.Calculations;
-using PrintingHouse.Models;
-
-namespace PrintingHouse.ConsoleClient
+﻿namespace PrintingHouse.ConsoleClient
 {
     using Data;
+    using System;
+    using System.Linq;
+    using Models;
 
     class Program
     {
