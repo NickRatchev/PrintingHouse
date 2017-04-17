@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PrintingHouse.Data.Store;
-using PrintingHouse.Models;
-
-namespace PrintingHouse.Data.Calculations
+﻿namespace PrintingHouse.Data.Calculations
 {
+    using System;
+    using System.Collections.Generic;
+    using PrintingHouse.Data.Store;
+    using PrintingHouse.Models;
+
     public static class Calculations
     {
         public static decimal CalculatePaperKg(ICollection<Component> components)
@@ -45,8 +42,8 @@ namespace PrintingHouse.Data.Calculations
                     date = component.Order.Date;
                     paperWaste = MaterialStore.GetPaperWasteByDate(date);
                     var materialConsumption = MaterialStore.GetMaterialConsumptionByDate(date);
-                    int pressRun = component.Order.PrintRun;
-                    int numberOfPages = pressRun * component.MachineData.M1NumberOfPages;
+                    int printRun = component.Order.PrintRun;
+                    int numberOfPages = printRun * component.MachineData.M1NumberOfPages;
                     var paper = component.Order.Paper;
                     decimal wastePercentage = 0;
 
@@ -78,6 +75,10 @@ namespace PrintingHouse.Data.Calculations
                     }
                     decimal secondMachineKg = (component.MachineData.M2NumberOfPages / (decimal)component.MachineData.M1NumberOfPages) * setupWasteKg;
                     setupWasteKg += secondMachineKg;
+
+                    int productionFactor = component.MachineData.ProductionFactor;
+                    int printRunChangeFactor = component.Order.PrintRun / (productionFactor * 250001);
+                    setupWasteKg += setupWasteKg * printRunChangeFactor / 2m;
                 }
 
                 decimal paperKg = CalculatePaperKg(components);
@@ -197,7 +198,7 @@ namespace PrintingHouse.Data.Calculations
                 {
                     DateTime date = component.Order.Date;
                     int productionFactor = component.MachineData.ProductionFactor;
-                    int printRunChangeFactor = 1 + component.Order.PrintRun / (productionFactor * 125200);
+                    int printRunChangeFactor = 1 + component.Order.PrintRun / (productionFactor * 250001);
                     var materialConsumption = MaterialStore.GetMaterialConsumptionByDate(date);
                     int numberOfPages = component.MachineData.NumberOfPages * component.Order.PrintRun;
 
@@ -229,6 +230,123 @@ namespace PrintingHouse.Data.Calculations
                 }
 
                 return numberOfBlinds;
+            }
+        }
+
+        public static decimal CalculatePaperPrice(decimal kg, DateTime date)
+        {
+            var paperPrice = MaterialStore.GetPaperPriceByDate(date);
+            return kg * paperPrice.Price * (1 + paperPrice.SafetyMargin / 100m) / 1000;
+        }
+
+        public static decimal CalculateBlackInkPrice(decimal kg, DateTime date)
+        {
+            InkPrice inkPrice = MaterialStore.GetBlackInkPriceByDate(date);
+            return kg * inkPrice.Price * (1 + inkPrice.SafetyMargin / 100m);
+        }
+
+        public static decimal CalculateColorInkPrice(decimal kg, DateTime date)
+        {
+            InkPrice inkPrice = MaterialStore.GetColorInkPriceByDate(date);
+            return kg * inkPrice.Price * (1 + inkPrice.SafetyMargin / 100m);
+        }
+
+        public static decimal CalculateWischwasserPrice(decimal kg, DateTime date)
+        {
+            WischwasserPrice wischwasserPrice = MaterialStore.GetWischwasserPriceByDate(date);
+            return kg * wischwasserPrice.Price * (1 + wischwasserPrice.SafetyMargin / 100m);
+        }
+
+        public static decimal CalculateFoilPrice(decimal kg, DateTime date)
+        {
+            FoilPrice foilPrice = MaterialStore.GetFoilPriceByDate(date);
+            return kg * foilPrice.Price * (1 + foilPrice.SafetyMargin / 100m);
+        }
+
+        public static decimal CalculateTapePrice(decimal meters, DateTime date)
+        {
+            TapePrice tapePrice = MaterialStore.GetTapePriceByDate(date);
+            return meters * tapePrice.Price * (1 + tapePrice.SafetyMargin / 100m);
+        }
+
+        public static decimal CalculatePlatesPrice(int plates, DateTime date)
+        {
+            PlatePrice platePrice = MaterialStore.GetPlatePriceByDate(date);
+            return plates * platePrice.Price * (1 + platePrice.SafetyMargin / 100m);
+        }
+
+        public static decimal CalculateBlindsPrice(int plates, DateTime date)
+        {
+            PlatePrice blindPrice = MaterialStore.GetBlindPriceByDate(date);
+            return plates * blindPrice.Price * (1 + blindPrice.SafetyMargin / 100m);
+        }
+
+        public static decimal CalculatePlatesExposingPrice(int plates, DateTime date)
+        {
+            ServicePrice servicePrice = MaterialStore.GetServicePriceByDate(date);
+            return plates * servicePrice.PlateExposing;
+        }
+
+        public static decimal CalculateMachineSetupPrice(ICollection<Component> components)
+        {
+            using (var context = new PrintingHouseContext())
+            {
+                decimal setupPrice = 0;
+
+                foreach (var component in components)
+                {
+                    DateTime date = component.Order.Date;
+                    ServicePrice servicePrice = MaterialStore.GetServicePriceByDate(date);
+
+                    int numberOfSetups = component.MachineData.M2NumberOfPages == 0 ? 1 : 2;
+                    int productionFactor = component.MachineData.ProductionFactor;
+                    int printRunChangeFactor = component.Order.PrintRun / (productionFactor * 250001);
+
+                    setupPrice += (numberOfSetups + numberOfSetups * printRunChangeFactor / 2m) * servicePrice.MachineSetup;
+                }
+
+                return setupPrice;
+            }
+        }
+
+        public static decimal CalculatePrintingPrice(ICollection<Component> components)
+        {
+            using (var context = new PrintingHouseContext())
+            {
+                decimal printingPrice = 0;
+
+                foreach (var component in components)
+                {
+                    DateTime date = component.Order.Date;
+                    ServicePrice servicePrice = MaterialStore.GetServicePriceByDate(date);
+
+                    int numberOfSetups = component.MachineData.M2NumberOfPages == 0 ? 1 : 2;
+                    int printRun = component.Order.PrintRun;
+                    int productionFactor = component.MachineData.ProductionFactor;
+
+                    printingPrice += (numberOfSetups * printRun / (decimal)productionFactor) * servicePrice.Impression;
+                }
+
+                return printingPrice;
+            }
+        }
+
+        public static decimal CalculatePackingPrice(ICollection<Component> components)
+        {
+            using (var context = new PrintingHouseContext())
+            {
+                decimal packingPrice = 0;
+
+                foreach (var component in components)
+                {
+                    DateTime date = component.Order.Date;
+                    ServicePrice servicePrice = MaterialStore.GetServicePriceByDate(date);
+                    int numberOfPages = component.MachineData.NumberOfPages * component.Order.PrintRun;
+
+                    packingPrice += numberOfPages * servicePrice.Packing / 1000;
+                }
+
+                return packingPrice;
             }
         }
     }
