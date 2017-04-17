@@ -8,7 +8,7 @@
         xmlns:mylocal="clr-namespace:PrintingHouse.Data;assembly=PrintingHouse.Data"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="Printing House ERP" MinHeight="750" MinWidth="1000" Width="1000">
+        Title="Printing House ERP" MinHeight="650" MinWidth="1000" Width="1000">
     <Window.Resources>
         <!-- Row height -->
         <GridLength x:Key="rowHeight">20</GridLength>

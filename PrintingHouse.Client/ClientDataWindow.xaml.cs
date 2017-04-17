@@ -10,12 +10,11 @@
 
     public partial class ClientDataWindow : Window
     {
-        PrintingHouseDbStore store = new PrintingHouseDbStore();
+        //PrintingHouseDbStore context = PrintingHouseDbStore.context;
 
         public ClientDataWindow()
         {
             InitializeComponent();
-
         }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
@@ -42,12 +41,7 @@
             }
             else
             {
-                Button b = sender as Button;
-                Client c = (Client)((Button)e.Source).DataContext;
-                Client client = store.GetClient(c.Id);
-                client.CompanyName = txtBoxCompanyName.Text;
-                store.SaveChanges();
-
+                PrintingHouseDbStore.SaveChanges();
                 Close();
             }
         }
