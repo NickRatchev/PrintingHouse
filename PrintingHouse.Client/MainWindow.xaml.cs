@@ -1,6 +1,7 @@
 ﻿namespace PrintingHouse.Client
 {
     using Data;
+    using Data.Calculations;
     using Models;
     using System;
     using System.Collections.ObjectModel;
@@ -21,8 +22,8 @@
         {
             InitializeComponent();
 
-            //store.Initialize();
-            Utility.InitializeDatabase();
+            store.Initialize();
+            //Utility.InitializeDatabase();
 
             // Select tab Orders
             tabOrders.IsSelected = true;
