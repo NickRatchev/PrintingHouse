@@ -14,7 +14,7 @@ namespace PrintingHouse.Data
         {
             using (var context = new PrintingHouseContext())
             {
-                context.Database.Initialize(true);
+                //context.Database.Initialize(true);
 
                 context.Database.ExecuteSqlCommand(File.ReadAllText("../../../InitialData/WebSizesConfig.sql"));
                 context.SaveChanges();
