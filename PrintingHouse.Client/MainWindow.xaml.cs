@@ -22,6 +22,7 @@
             InitializeComponent();
 
             //store.Initialize();
+            Utility.InitializeDatabase();
 
             // Select tab Orders
             tabOrders.IsSelected = true;

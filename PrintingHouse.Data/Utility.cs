@@ -9,7 +9,7 @@
             using (var context = new PrintingHouseContext())
             {
                 // Conflict with WPF initializer
-                //context.Database.Initialize(true);
+                context.Database.Initialize(true);
 
                 string dir = "../../../InitialData";
                 context.Database.ExecuteSqlCommand(File.ReadAllText($"{dir}/InitialData.sql"));
