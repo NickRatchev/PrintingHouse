@@ -5,6 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PrintingHouse.Client"
+        xmlns:vm="clr-namespace:PrintingHouse.Client.ViewModel"
         mc:Ignorable="d"
         Title="Client Data" Height="300" Width="500">
     <Grid Name="gridClientData">
@@ -28,23 +29,26 @@
         <Label Grid.Column="0" Grid.Row="3" Name="label4" Content="Address:" HorizontalAlignment="Stretch" Margin="5,5" VerticalAlignment="Stretch"/>
         <Label Grid.Column="0" Grid.Row="4" Name="label5" Content="Contact Person:" HorizontalAlignment="Stretch" Margin="5,5" VerticalAlignment="Stretch"/>
         <Label Grid.Column="0" Grid.Row="5" Name="label6" Content="Phone Numbers:" HorizontalAlignment="Stretch" Margin="5,5" VerticalAlignment="Stretch"/>
-        <Label Grid.Column="0" Grid.Row="6" Name="label7" Content="Active:" HorizontalAlignment="Stretch" Margin="5,5" VerticalAlignment="Stretch"/>
-        <TextBox Grid.Column="1" Grid.Row="0" Name="txtBoxCompanyName" HorizontalAlignment="Stretch" Margin="5,5" Text="{Binding Path=CompanyName, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Stretch"/>
-        <TextBox Grid.Column="1" Grid.Row="1" Name="txtBoxVatNumber" HorizontalAlignment="Stretch" Margin="5,5" Text="{Binding Path=VatNumber, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Stretch"/>
-        <TextBox Grid.Column="1" Grid.Row="2" Name="txtBoxTown" HorizontalAlignment="Stretch" Margin="5,5" Text="{Binding Path=Town.Name, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Stretch"/>
-        <TextBox Grid.Column="1" Grid.Row="3" Name="txtBoxAddress" HorizontalAlignment="Stretch" Margin="5,5" Text="{Binding Path=Address, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Stretch"/>
-        <TextBox Grid.Column="1" Grid.Row="4" Name="txtBoxContactPerson" HorizontalAlignment="Stretch" Margin="5,5" Text="{Binding Path=ContactPerson, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Stretch"/>
-        <TextBox Grid.Column="1" Grid.Row="5" Name="txtBoxPhoneNumbers" HorizontalAlignment="Stretch" Margin="5,5" Text="{Binding Path=PhoneNumbers, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Stretch"/>
-        <StackPanel Grid.Column="1" Grid.Row="6" HorizontalAlignment="Left" Orientation="Horizontal" VerticalAlignment="Center" >
-            <StackPanel.Resources>
-                <local:BooleanConverter x:Key="bool"/>
-            </StackPanel.Resources>
-            <RadioButton GroupName="Group1" Name="radioButton1" Content="Active" IsChecked="{Binding IsActive, Converter={StaticResource bool}, ConverterParameter='true', UpdateSourceTrigger=PropertyChanged}" Margin="5,5"/>
-            <RadioButton GroupName="Group1" Name="radioButton2" Content="Non-Active" IsChecked="{Binding IsActive, Converter={StaticResource bool}, ConverterParameter='false', UpdateSourceTrigger=PropertyChanged}" Margin="5,5"/>
-        </StackPanel>
+        <Label Grid.Column="0" Grid.Row="6" Name="label7" Content="" HorizontalAlignment="Stretch" Margin="5,5" VerticalAlignment="Stretch"/>
+        <TextBox Grid.Column="1" Grid.Row="0" Name="txtBoxCompanyName" HorizontalAlignment="Stretch" Margin="5,5" Text="{Binding Path=CompanyName, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true, UpdateSourceTrigger=Explicit}" VerticalAlignment="Stretch"/>
+        <TextBox Grid.Column="1" Grid.Row="1" Name="txtBoxVatNumber" HorizontalAlignment="Stretch" Margin="5,5" Text="{Binding Path=VatNumber, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true, UpdateSourceTrigger=Explicit}" VerticalAlignment="Stretch"/>
+        <TextBox Grid.Column="1" Grid.Row="2" Name="txtBoxTown" HorizontalAlignment="Stretch" Margin="5,5" Text="{Binding Path=Town.Name, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true, UpdateSourceTrigger=Explicit}" VerticalAlignment="Stretch"/>
+        <TextBox Grid.Column="1" Grid.Row="3" Name="txtBoxAddress" HorizontalAlignment="Stretch" Margin="5,5" Text="{Binding Path=Address, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true, UpdateSourceTrigger=Explicit}" VerticalAlignment="Stretch"/>
+        <TextBox Grid.Column="1" Grid.Row="4" Name="txtBoxContactPerson" HorizontalAlignment="Stretch" Margin="5,5" Text="{Binding Path=ContactPerson, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true, UpdateSourceTrigger=Explicit}" VerticalAlignment="Stretch"/>
+        <TextBox Grid.Column="1" Grid.Row="5" Name="txtBoxPhoneNumbers" HorizontalAlignment="Stretch" Margin="5,5" Text="{Binding Path=PhoneNumbers, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true, UpdateSourceTrigger=Explicit}" VerticalAlignment="Stretch"/>
+        <CheckBox x:Name="checkBoxActive" Content="Active" Grid.Column="1" Grid.Row ="6"  HorizontalAlignment="Left" Margin="5,5" VerticalAlignment="Center" IsChecked="{Binding IsActive, UpdateSourceTrigger=Explicit}"/>
         <StackPanel Grid.ColumnSpan="2" Grid.Row="7" HorizontalAlignment="Center" Orientation="Horizontal" VerticalAlignment="Center">
-            <Button Name="btnCancel" Content="Cancel" Margin="5,5" Width="75" Click="btnCancel_Click"/>
-            <Button Name="btnSave" Content="Save" Margin="5,5" Width="75" Click="btnSave_Click"/>
+            <Button Name="btnCancel"
+                    Content="Cancel"
+                    Margin="5,5"
+                    Width="75"
+                    Click="btnCancel_Click"/>
+            <Button Name="btnSave"
+                    Content="Save"
+                    IsDefault="True"
+                    Margin="5,5"
+                    Width="75"
+                    Click="btnSave_Click"/>
         </StackPanel>
     </Grid>
 </Window>

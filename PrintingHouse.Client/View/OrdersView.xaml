@@ -1,0 +1,251 @@
+﻿<UserControl x:Class="PrintingHouse.Client.View.OrdersView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PrintingHouse.Client.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid Background="#D6DCE4" Margin="10,10,10,10" Name="gridOrders">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.7*"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <!-- Section Order Data -->
+        <TextBox Grid.Row="0"
+                 Margin="0,0,0,0"
+                 Name="txtFilterOrder"
+                 Text="{Binding SearchFilter, UpdateSourceTrigger=PropertyChanged}"/>
+        <ListView Background="Transparent"
+                              BorderThickness="0"
+                              Grid.Row="1"
+                              Name="listOrders"
+                              ItemsSource="{Binding CollectionViewOrders.View}"
+                              PreviewMouseLeftButtonUp="listView_Click"
+                              SizeChanged="ListView_SizeChanged">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <!-- Resolves text alignment -->
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <!-- Focus on selected item -->
+                    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="FocusManager.FocusedElement" Value="{Binding RelativeSource={RelativeSource Self}}"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView ColumnHeaderContainerStyle="{StaticResource GridHeaderOrders}">
+                    <GridViewColumn Header="Date" Width="80">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock 
+                                    Text="{Binding Path=Date, StringFormat=dd.MM.yyyy}" TextAlignment="Center"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Product" DisplayMemberBinding="{Binding Path=Product.Title}" Width="200"/>
+                    <GridViewColumn Header="Company Name" DisplayMemberBinding="{Binding Path=Client.CompanyName}"/>
+                    <GridViewColumn Header="Issue" Width="80">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=Issue}" TextAlignment="Right"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Print Run" Width="80">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=PrintRun}" TextAlignment="Right"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Pages" Width="80">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Path=Components/MachineData.NumberOfPages}" TextAlignment="Right"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Paper" Width="100">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} - {1}">
+                                            <Binding Path="Paper.Description" />
+                                            <Binding Path="Paper.Grammage" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Edit" Width="65">
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Edit"
+                                    Command="{Binding ElementName=listOrders, Path=DataContext.OrderEdit}"
+                                    CommandParameter="{Binding}"
+                                    Width="50"/>
+                            </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Delete" Width="65">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Content="Delete"
+                                    Command="{Binding ElementName=listOrders, Path=DataContext.OrderDelete}"
+                                    CommandParameter="{Binding}"
+                                    Width="50"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <!-- Rectangle Separators -->
+        <Rectangle Grid.Row="2" Height="20" Fill="#AAAAAA" Margin="20,0"></Rectangle>
+        <!-- Section Calculations -->
+        <Grid Grid.Row="3" Margin="20,0" Name="calculations">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <!-- Notes -->
+            <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,0,10,0">
+                <TextBlock FontStyle="Italic" FontWeight="Bold" Foreground="#305496" Margin="0,0" Text="Components:"/>
+                <ItemsControl
+                                ItemsSource="{Binding SelectedItem.Components, ElementName=listOrders, Mode=OneWay}"
+                                Name="listComponent">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock FontStyle="Italic" FontWeight="Bold" Margin="0,2">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}*  {0} pages  -->  Color Pairs - {1}, {2}, {3}, {4}">
+                                            <Binding Path="MachineData.NumberOfPages"/>
+                                            <Binding Path="Pairs4Color"/>
+                                            <Binding Path="Pairs3Color"/>
+                                            <Binding Path="Pairs2Color"/>
+                                            <Binding Path="Pairs1Color"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+            <!-- Material Prices -->
+            <Grid Grid.Column="1" Grid.Row="0" Margin="10,0,10,0" Name="materialPrices">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.Row="0" FontStyle="Italic" FontWeight="Bold" Foreground="#305496" Margin="0,0" Text="Mterial Prices:"/>
+                <TextBlock Grid.Column="0" Grid.Row="1" FontWeight="Bold" Margin="0,2" Text="Plates"/>
+                <TextBlock Grid.Column="0" Grid.Row="2" FontWeight="Bold" Margin="0,2" Text="Blinds"/>
+                <TextBlock Grid.Column="0" Grid.Row="3" FontWeight="Bold" Margin="0,2" Text="Paper"/>
+                <TextBlock Grid.Column="0" Grid.Row="4" FontWeight="Bold" Margin="0,2" Text="Paper Waste"/>
+                <TextBlock Grid.Column="0" Grid.Row="5" FontWeight="Bold" Margin="0,2" Text="Ink Black"/>
+                <TextBlock Grid.Column="0" Grid.Row="6" FontWeight="Bold" Margin="0,2" Text="Ink Color"/>
+                <TextBlock Grid.Column="0" Grid.Row="7" FontWeight="Bold" Margin="0,2" Text="Wischwasser"/>
+                <TextBlock Grid.Column="0" Grid.Row="8" FontWeight="Bold" Margin="0,3" Text="Foil"/>
+                <TextBlock Grid.Column="0" Grid.Row="9" FontWeight="Bold" Margin="0,2" Text="Tape"/>
+                <TextBlock Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right" Margin="0,2" Name="txtBlockPlatesPcs" Text="pcs"/>
+                <TextBlock Grid.Column="1" Grid.Row="2" HorizontalAlignment="Right" Margin="0,2" Name="txtBlockBlindsPcs" Text="pcs"/>
+                <TextBlock Grid.Column="1" Grid.Row="3" HorizontalAlignment="Right" Margin="0,2" Name="txtBlockPaperKg" Text="kg"/>
+                <TextBlock Grid.Column="1" Grid.Row="4" HorizontalAlignment="Right" Margin="0,2" Name="txtBlockPaperWasteKg" Text="kg"/>
+                <TextBlock Grid.Column="1" Grid.Row="5" HorizontalAlignment="Right" Margin="0,2" Name="txtBlockInkBlackKg" Text="kg"/>
+                <TextBlock Grid.Column="1" Grid.Row="6" HorizontalAlignment="Right" Margin="0,2" Name="txtBlockInkColorKg" Text="kg"/>
+                <TextBlock Grid.Column="1" Grid.Row="7" HorizontalAlignment="Right" Margin="0,2" Name="txtBlockWischwasserKg" Text="kg"/>
+                <TextBlock Grid.Column="1" Grid.Row="8" HorizontalAlignment="Right" Margin="0,2" Name="txtBlockFoilKg" Text="kg"/>
+                <TextBlock Grid.Column="1" Grid.Row="9" HorizontalAlignment="Right" Margin="0,2" Name="txtBlockTapeM" Text="m"/>
+                <TextBlock Grid.Column="2" Grid.Row="1" HorizontalAlignment="Right" Margin="0,2" Name="txtBlockPlatesPrice" Text="BGN"/>
+                <TextBlock Grid.Column="2" Grid.Row="2" HorizontalAlignment="Right" Margin="0,2" Name="txtBlockBlindsPrice" Text="BGN"/>
+                <TextBlock Grid.Column="2" Grid.Row="3" HorizontalAlignment="Right" Margin="0,2" Name="txtBlockPaperPrice" Text="BGN"/>
+                <TextBlock Grid.Column="2" Grid.Row="4" HorizontalAlignment="Right" Margin="0,2" Name="txtBlockPaperWastePrice" Text="BGN"/>
+                <TextBlock Grid.Column="2" Grid.Row="5" HorizontalAlignment="Right" Margin="0,2" Name="txtBlockInkBlackPrice" Text="BGN"/>
+                <TextBlock Grid.Column="2" Grid.Row="6" HorizontalAlignment="Right" Margin="0,2" Name="txtBlockInkColorPrice" Text="BGN"/>
+                <TextBlock Grid.Column="2" Grid.Row="7" HorizontalAlignment="Right" Margin="0,2" Name="txtBlockWischwasserPrice" Text="BGN"/>
+                <TextBlock Grid.Column="2" Grid.Row="8" HorizontalAlignment="Right" Margin="0,2" Name="txtBlockFoilPrice" Text="BGN"/>
+                <TextBlock Grid.Column="2" Grid.Row="9" HorizontalAlignment="Right" Margin="0,2" Name="txtBlockTapePrice" Text="BGN"/>
+                <TextBlock Grid.Column="2" Grid.Row="10" HorizontalAlignment="Right" Margin="0,2" Name="txtBlockSepMaterialsPrice" Text="--------------------------"/>
+                <TextBlock Grid.Column="2" Grid.Row="11" HorizontalAlignment="Right" Margin="0,2" Name="txtBlockMaterialsTotalPrice" Text="BGN"/>
+            </Grid>
+            <!-- Service Prices -->
+            <Grid Grid.Column="2" Grid.Row="0" Margin="10,0,0,0" Name="servicePrices">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.Row="0" FontStyle="Italic" FontWeight="Bold" Foreground="#305496" Margin="0,0" Text="Service Prices:"/>
+                <TextBlock Grid.Column="0" Grid.Row="1" FontWeight="Bold" Margin="0,2" Text="Plate Immaging"/>
+                <TextBlock Grid.Column="0" Grid.Row="2" FontWeight="Bold" Margin="0,2" Text="Machine Setup"/>
+                <TextBlock Grid.Column="0" Grid.Row="3" FontWeight="Bold" Margin="0,2" Text="Printing"/>
+                <TextBlock Grid.Column="0" Grid.Row="4" FontWeight="Bold" Margin="0,2" Text="Packing"/>
+                <TextBlock Grid.Column="0" Grid.Row="12" FontWeight="Bold" Foreground="#305496" Margin="0,2" Text="TOTAL PRICE:"/>
+                <TextBlock Grid.Column="1" Grid.Row="1" Margin="0,2" Name="txtBlockPlateImagingPrice" Text="BGN"/>
+                <TextBlock Grid.Column="1" Grid.Row="2" Margin="0,2" Name="txtBlockMachineSetupPrice" Text="BGN"/>
+                <TextBlock Grid.Column="1" Grid.Row="3" Margin="0,2" Name="txtBlockPrintingPrice" Text="BGN"/>
+                <TextBlock Grid.Column="1" Grid.Row="4" Margin="0,2" Name="txtBlockPackingPrice" Text="BGN"/>
+                <TextBlock Grid.Column="1" Grid.Row="5" Margin="0,2" Name="txtBlockSepServicePrice" Text="--------------------------"/>
+                <TextBlock Grid.Column="1" Grid.Row="6" Margin="0,2" Name="txtBlockServiceTotalPrice" Text="BGN"/>
+                <TextBlock Grid.Column="1" Grid.Row="12" Margin="0,2" Name="txtBlockTotalPrice" Text="BGN"/>
+            </Grid>
+        </Grid>
+        <Button Grid.Row="4"
+                Command="{Binding ElementName=listOrders, Path=DataContext.OrderCreate}"
+                Content="CREATE NEW ORDER"
+                Foreground="#305496"
+                FontWeight="Bold"
+                Margin="0,0,0,0"
+                Width="300"/>
+    </Grid>
+</UserControl>

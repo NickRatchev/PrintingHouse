@@ -1,0 +1,296 @@
+﻿<Window x:Class="PrintingHouse.Client.OrderDataWindow"
+        WindowStartupLocation="CenterScreen"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PrintingHouse.Client"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+        Title="Create Order" MinHeight="500" Width="800">
+    <Grid Background="#D6DCE4" x:Name="gridOrders">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+        <!-- Section Order Data -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="2*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Column="0" Grid.Row="1" Margin="20,0,0,0" VerticalAlignment="Center">
+                <TextBlock FontWeight="Bold" Foreground="#305496" Margin="0,0,0,0" Text="Clients:"/>
+                <ComboBox Name="comboBoxClients"
+                          DisplayMemberPath="CompanyName"
+                          ItemsSource="{Binding Path=Clients}"
+                          HorizontalAlignment="Left"
+                          Width="200">
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Grid.Column="0" Grid.Row="2" Margin="20,20,0,0">
+                <TextBlock FontWeight="Bold" Foreground="#305496" Margin="0,0,0,0" Text="Products:"/>
+                <ComboBox Name="comboBoxProducts"
+                          DisplayMemberPath="Title"
+                          HorizontalAlignment="Left"
+                          ItemsSource="{Binding ElementName=comboBoxClients, Path=SelectedItem.Products}"
+                          Width="200"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Grid.Row="1" Margin="20,0,0,0" VerticalAlignment="Center">
+                <TextBlock FontWeight="Bold" Foreground="#305496" Margin="0,0,0,0" Text="Date:"/>
+                <DatePicker HorizontalAlignment="Left"
+                            Margin="0,0,0,0"
+                            SelectedDate="{x:Static sys:DateTime.Now}"
+                            SelectedDateChanged="DatePicker_SelectedDateChanged"
+                            VerticalAlignment="Top"
+                            Width="200"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Grid.Row="2" Margin="20,20,0,0">
+                <TextBlock FontWeight="Bold" Foreground="#305496" Margin="0,0,0,0" Text="Paper:"/>
+                <ComboBox Name="comboBoxPapers"
+                            HorizontalAlignment="Left"
+                            ItemsSource="{Binding Path=Papers}"
+                            Margin="0,0,0,0"
+                            Width="200">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock>
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}{0} - {1:F1}">
+                                        <Binding Path="Description"/>
+                                        <Binding Path="Grammage"/>
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Grid.Column="2" Grid.Row="1" Margin="0,0,0,0" VerticalAlignment="Center">
+                <TextBlock FontWeight="Bold" Foreground="#305496" Margin="0,0,0,0" Text="Issue:"/>
+                <TextBox Height="22"
+                         HorizontalAlignment="Left"
+                         Margin="0,0,0,0"
+                         DataObject.Pasting="TextBoxPasting"
+                         PreviewTextInput="NumberValidationTextBox"
+                         Text="{Binding Path=Issue, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true, UpdateSourceTrigger=PropertyChanged}"
+                         Width="200"/>
+            </StackPanel>
+            <StackPanel Grid.Column="2" Grid.Row="2" Margin="0,20,0,0">
+                <TextBlock FontWeight="Bold" Foreground="#305496" Margin="0,0,0,0" Text="Print Run:"/>
+                <TextBox Height="22"
+                         HorizontalAlignment="Left"
+                         Margin="0,0,0,0"
+                         DataObject.Pasting="TextBoxPasting"
+                         PreviewTextInput="NumberValidationTextBox"
+                         Text="{Binding Path=PrintRun, Mode=TwoWay, NotifyOnValidationError=true, ValidatesOnExceptions=true, UpdateSourceTrigger=PropertyChanged}"
+                         Width="200"/>
+            </StackPanel>
+            <StackPanel Grid.ColumnSpan="2" Grid.Row="3" Margin="20,20,0,0" Orientation="Horizontal" VerticalAlignment="Top">
+                <TextBlock FontWeight="Bold" Foreground="#305496" Margin="0,0,2,0" Text="Number of pages:" VerticalAlignment="Top"/>
+                <TextBlock FontWeight="Bold" Foreground="#305496" Margin="2,0,0,0" Text="(calculated automatically)"/>
+            </StackPanel>
+        </Grid>
+        <Rectangle Grid.Row="1" Height="20" Fill="#AAAAAA" Margin="20,0"></Rectangle>
+        <!-- Section Components -->
+        <Grid Grid.Row="2" Margin="20,0" x:Name="listComponents">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <Label Grid.Column="0" Grid.Row="0" Content="COMPONENTS" FontWeight="Bold" Foreground="Red" Margin="5,0" VerticalAlignment="Center"/>
+            <StackPanel Grid.Column="1" Grid.Row="0" Margin="0,0,0,0" VerticalAlignment="Center">
+                <TextBlock FontWeight="Bold" Foreground="#305496" Margin="0,0,0,0" Text="Number of pages:"/>
+                <ComboBox Name="comboBoxNumberOfPages"
+                          DisplayMemberPath="NumberOfPages"
+                          ItemsSource="{Binding Path=MachineData}"
+                          HorizontalAlignment="Left"
+                          Width="100">
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Grid.Column="2" Grid.Row="0" Margin="0,0,0,0" VerticalAlignment="Center">
+                <TextBlock FontWeight="Bold" Foreground="#305496" Margin="0,0,0,0" Text="Pairs 4 Color:"/>
+                <ComboBox Name="comboBoxPairs4Color"
+                          DisplayMemberPath="NumberOfPages"
+                          ItemsSource="{Binding Path=MachineData}"
+                          HorizontalAlignment="Left"
+                          Width="100">
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Grid.Column="3" Grid.Row="0" Margin="0,0,0,0" VerticalAlignment="Center">
+                <TextBlock FontWeight="Bold" Foreground="#305496" Margin="0,0,0,0" Text="Pairs 2 Color:"/>
+                <ComboBox Name="comboBoxPairs3Color"
+                          DisplayMemberPath="NumberOfPages"
+                          ItemsSource="{Binding Path=MachineData}"
+                          HorizontalAlignment="Left"
+                          Width="100">
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Grid.Column="4" Grid.Row="0" Margin="0,0,0,0" VerticalAlignment="Center">
+                <TextBlock FontWeight="Bold" Foreground="#305496" Margin="0,0,0,0" Text="Pairs 3 Color:"/>
+                <ComboBox Name="comboBoxPair2Color"
+                          DisplayMemberPath="NumberOfPages"
+                          ItemsSource="{Binding Path=MachineData}"
+                          HorizontalAlignment="Left"
+                          Width="100">
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Grid.Column="5" Grid.Row="0" Margin="0,0,0,0" VerticalAlignment="Center">
+                <TextBlock FontWeight="Bold" Foreground="#305496" Margin="0,0,0,0" Text="Pairs 1 Color:"/>
+                <ComboBox Name="comboBoxPairs1Color"
+                          DisplayMemberPath="NumberOfPages"
+                          ItemsSource="{Binding Path=MachineData}"
+                          HorizontalAlignment="Left"
+                          Width="100">
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Grid.Column="6" Grid.Row="0" Margin="0,0,0,0" VerticalAlignment="Center">
+                <Button Content="ADD"
+                    Foreground="#305496"
+                    FontWeight="Bold"
+                    Height="25"
+                    Margin="10,15,0,0"
+                    Width="80"/>
+            </StackPanel>
+        </Grid>
+        <Rectangle Grid.Row="3" Height="20" Fill="#AAAAAA" Margin="20,0"></Rectangle>
+        <!-- Section Calculations -->
+        <Grid Grid.Row="4" Margin="20,0" x:Name="calculations">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <!-- Add Components -->
+            <StackPanel Grid.Column="0" Grid.Row="0" x:Name="notes">
+                <TextBlock FontStyle="Italic" FontWeight="Bold" Foreground="#305496" Margin="0,0" Text="Components:"/>
+                <TextBlock FontStyle="Italic" FontWeight="Bold" Margin="0,1" Text=""/>
+                <TextBlock FontStyle="Italic" FontWeight="Bold" Margin="0,0" Text=""/>
+            </StackPanel>
+            <!-- Material Prices -->
+            <Grid Grid.Column="1" Grid.Row="0" Margin="0,0" x:Name="materialPrices">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.Row="0" FontStyle="Italic" FontWeight="Bold" Foreground="#305496" Margin="0,0" Text="Mterial Prices:"/>
+                <TextBlock Grid.Column="0" Grid.Row="1" FontWeight="Bold" Margin="0,0" Text="Plates"/>
+                <TextBlock Grid.Column="0" Grid.Row="2" FontWeight="Bold" Margin="0,0" Text="Blinds"/>
+                <TextBlock Grid.Column="0" Grid.Row="3" FontWeight="Bold" Margin="0,0" Text="Paper"/>
+                <TextBlock Grid.Column="0" Grid.Row="4" FontWeight="Bold" Margin="0,0" Text="Paper Waste"/>
+                <TextBlock Grid.Column="0" Grid.Row="5" FontWeight="Bold" Margin="0,0" Text="Ink Black"/>
+                <TextBlock Grid.Column="0" Grid.Row="6" FontWeight="Bold" Margin="0,0" Text="Ink Color"/>
+                <TextBlock Grid.Column="0" Grid.Row="7" FontWeight="Bold" Margin="0,0" Text="Wischwasser"/>
+                <TextBlock Grid.Column="0" Grid.Row="8" FontWeight="Bold" Margin="0,0" Text="Foil"/>
+                <TextBlock Grid.Column="0" Grid.Row="9" FontWeight="Bold" Margin="0,0" Text="Tape"/>
+                <TextBlock Grid.Column="1" Grid.Row="1" Margin="0,0" Text="pcs"/>
+                <TextBlock Grid.Column="1" Grid.Row="2" Margin="0,0" Text="pcs"/>
+                <TextBlock Grid.Column="1" Grid.Row="3" Margin="0,0" Text="kg"/>
+                <TextBlock Grid.Column="1" Grid.Row="4" Margin="0,0" Text="kg"/>
+                <TextBlock Grid.Column="1" Grid.Row="5" Margin="0,0" Text="kg"/>
+                <TextBlock Grid.Column="1" Grid.Row="6" Margin="0,0" Text="kg"/>
+                <TextBlock Grid.Column="1" Grid.Row="7" Margin="0,0" Text="kg"/>
+                <TextBlock Grid.Column="1" Grid.Row="8" Margin="0,0" Text="kg"/>
+                <TextBlock Grid.Column="1" Grid.Row="9" Margin="0,0" Text="m"/>
+                <TextBlock Grid.Column="2" Grid.Row="1" Margin="0,0" Text="BGN"/>
+                <TextBlock Grid.Column="2" Grid.Row="2" Margin="0,0" Text="BGN"/>
+                <TextBlock Grid.Column="2" Grid.Row="3" Margin="0,0" Text="BGN"/>
+                <TextBlock Grid.Column="2" Grid.Row="4" Margin="0,0" Text="BGN"/>
+                <TextBlock Grid.Column="2" Grid.Row="5" Margin="0,0" Text="BGN"/>
+                <TextBlock Grid.Column="2" Grid.Row="6" Margin="0,0" Text="BGN"/>
+                <TextBlock Grid.Column="2" Grid.Row="7" Margin="0,0" Text="BGN"/>
+                <TextBlock Grid.Column="2" Grid.Row="8" Margin="0,0" Text="BGN"/>
+                <TextBlock Grid.Column="2" Grid.Row="9" Margin="0,0" Text="BGN"/>
+                <TextBlock Grid.Column="2" Grid.Row="10" Margin="0,0" Text="--------------------------"/>
+                <TextBlock Grid.Column="2" Grid.Row="11" Margin="0,0" Text="BGN"/>
+            </Grid>
+            <!-- Service Prices -->
+            <Grid Grid.Column="2" Grid.Row="0" Margin="0,0" x:Name="servicePrices">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Column="0" Grid.Row="0" FontStyle="Italic" FontWeight="Bold" Foreground="#305496" Margin="0,0" Text="Service Prices:"/>
+                <TextBlock Grid.Column="0" Grid.Row="1" FontWeight="Bold" Margin="0,0" Text="Plate Immaging"/>
+                <TextBlock Grid.Column="0" Grid.Row="2" FontWeight="Bold" Margin="0,0" Text="Machine Setup"/>
+                <TextBlock Grid.Column="0" Grid.Row="3" FontWeight="Bold" Margin="0,0" Text="Printing"/>
+                <TextBlock Grid.Column="0" Grid.Row="4" FontWeight="Bold" Margin="0,0" Text="Packing"/>
+                <TextBlock Grid.Column="0" Grid.Row="12" FontWeight="Bold" Foreground="#305496" Margin="0,0" Text="TOTAL PRICE:"/>
+                <TextBlock Grid.Column="1" Grid.Row="1" Margin="0,0" Text="BGN"/>
+                <TextBlock Grid.Column="1" Grid.Row="2" Margin="0,0" Text="BGN"/>
+                <TextBlock Grid.Column="1" Grid.Row="3" Margin="0,0" Text="BGN"/>
+                <TextBlock Grid.Column="1" Grid.Row="4" Margin="0,0" Text="BGN"/>
+                <TextBlock Grid.Column="1" Grid.Row="5" Margin="0,0" Text="--------------------------"/>
+                <TextBlock Grid.Column="1" Grid.Row="6" Margin="0,0" Text="BGN"/>
+                <TextBlock Grid.Column="1" Grid.Row="12" Margin="0,0" Text="BGN"/>
+            </Grid>
+        </Grid>
+        <StackPanel Grid.Row="5" HorizontalAlignment="Center" Margin="0,0,0,0" Orientation="Horizontal">
+            <Button Content="CANCEL"
+                    Click="btnCancelOrder_Click"
+                    Foreground="#305496"
+                    FontWeight="Bold"
+                    Height="30"
+                    Margin="0,0,10,0"
+                    Width="300"/>
+            <Button Content="SAVE"
+                    Click="btnSaveOrder_Click"
+                    Foreground="#305496"
+                    FontWeight="Bold"
+                    Height="30"
+                    Margin="10,0,0,0"
+                    Width="300"/>
+        </StackPanel>
+    </Grid>
+</Window>

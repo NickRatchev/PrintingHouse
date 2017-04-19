@@ -1,10 +1,7 @@
 ﻿namespace PrintingHouse.Client
 {
     using Data;
-    using Models;
-    using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
 
@@ -41,7 +38,16 @@
             }
             else
             {
-                PrintingHouseDbStore.SaveChanges();
+                DialogResult = true;
+
+                txtBoxCompanyName.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+                txtBoxVatNumber.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+                txtBoxTown.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+                txtBoxAddress.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+                txtBoxContactPerson.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+                txtBoxPhoneNumbers.GetBindingExpression(TextBox.TextProperty).UpdateSource();
+                checkBoxActive.GetBindingExpression(CheckBox.IsCheckedProperty).UpdateSource();
+
                 Close();
             }
         }
