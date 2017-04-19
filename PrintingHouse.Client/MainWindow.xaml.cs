@@ -14,9 +14,9 @@
     public partial class MainWindow : Window
     {
         //PrintingHouseDbStore store = new PrintingHouseDbStore();
-        public ObservableCollection<Client> Clients = new ObservableCollection<Client>();
-        public ObservableCollection<Component> components = new ObservableCollection<Component>();
-        public ObservableCollection<Order> orders = new ObservableCollection<Order>();
+        public ObservableCollection<Client> Clients;
+        public ObservableCollection<Component> components;
+        public ObservableCollection<Order> orders;
 
         public MainWindow()
         {
@@ -45,29 +45,41 @@
 
         private void btnAddClient_Click(object sender, RoutedEventArgs e)
         {
-            Client client = new Client()
-            {
-                //CompanyName = "Sample Name",
-                //TownId = 1
-            };
-            
+            Client client = new Client();
+
             ClientDataWindow clientDataWindow = new ClientDataWindow();
             clientDataWindow.DataContext = client;
-            PrintingHouseDbStore.context.Clients.Add(client);
-            clientDataWindow.ShowDialog();            
+            clientDataWindow.ShowDialog();
 
-            Clients.Add(client);
-
+            if (clientDataWindow.DialogResult == true)
+            {                
+                Clients.Add(client);
+                PrintingHouseDbStore.context.Clients.Add(client);
+                PrintingHouseDbStore.SaveChanges();
+            }            
         }
 
         private void btnEditClient_Click(object sender, RoutedEventArgs e)
         {
             //Button b = sender as Button;
-            Client client = (Client)((Button)e.Source).DataContext;
+            Client client = (Client)((Button)e.Source).DataContext;            
 
             ClientDataWindow clientDataWindow = new ClientDataWindow();
             clientDataWindow.DataContext = client;
-            clientDataWindow.ShowDialog();            
+            clientDataWindow.ShowDialog();
+
+            if (clientDataWindow.DialogResult == true)
+            {
+                MessageBox.Show("Save");
+                PrintingHouseDbStore.SaveChanges();
+            }
+            else
+            {
+                MessageBox.Show("Cancel");
+                
+                //CollectionViewSource.GetDefaultView(listClients.ItemsSource).Refresh();
+                //listClients.ItemsSource = Clients;                
+            }
         }
 
         private void btnCreateNewOrder_Click(object sender, RoutedEventArgs e)
