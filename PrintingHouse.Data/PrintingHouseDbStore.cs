@@ -18,17 +18,17 @@
             return context.Clients.SingleOrDefault(e => e.Id == id);
         }
 
-        public static List<Client> GetClients()
+        public static ICollection<Client> GetClients()
         {
             return context.Clients.ToList();
         }
 
-        public static List<Component> GetComponents()
+        public static ICollection<Component> GetComponents()
         {
             return context.Components.ToList();
         }
 
-        public static List<Order> GetOrders()
+        public static ICollection<Order> GetOrders()
         {
             return context.Orders.ToList();
         }

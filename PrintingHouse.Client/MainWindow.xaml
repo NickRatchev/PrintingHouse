@@ -47,7 +47,19 @@
             <TabItem Header="Clients">
                 <Grid Background="#D6DCE4">
                     <DockPanel Margin="10">
-                        <TextBox DockPanel.Dock="Top" Margin="0,0,0,10" Name="txtFilterClient" TextChanged="OnTextChangedClient"/>
+                        <Grid  DockPanel.Dock="Top"  Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50*"/>
+                                <ColumnDefinition Width="354*"/>
+                                <ColumnDefinition Width="65*"/>
+                                <ColumnDefinition Width="15*"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" HorizontalAlignment="Left" Margin="0,0,0,-0.8">Filter by name</Label>
+
+                            <TextBox DockPanel.Dock="Left" Margin="99,2,5,1.2" Name="txtFilterClient" TextChanged="OnTextChangedClient" Padding="0" Grid.ColumnSpan="2"/>
+                            <Label Grid.Column="2" HorizontalAlignment="Right" Margin="0,0,1.6,-0.8" Width="99">Show only active</Label>
+                            <CheckBox Grid.Column="3" Name="checkOnlyActive" IsChecked="true" VerticalAlignment="Center" Height="15" Margin="6.4,5,0,5.2" Click="OnFilterActiveClick"/>
+                        </Grid>
                         <Button DockPanel.Dock="Bottom" Content="Add Client" Click="btnAddClient_Click" Margin="0,10" Width="100"/>
                         <ListView
                             Background="Transparent"
@@ -70,7 +82,7 @@
                             </ListView.ItemContainerStyle>
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn Header="Comapny Name" DisplayMemberBinding="{Binding Path=CompanyName}"/>
+                                    <GridViewColumn Header="Company Name" DisplayMemberBinding="{Binding Path=CompanyName}"/>
                                     <GridViewColumn Header="VAT Number" DisplayMemberBinding="{Binding Path=VatNumber}" Width="100"/>
                                     <GridViewColumn Header="Town" DisplayMemberBinding="{Binding Path=Town.Name}" Width="120"/>
                                     <GridViewColumn Header="Address" DisplayMemberBinding="{Binding Path=Address}" Width="120"/>

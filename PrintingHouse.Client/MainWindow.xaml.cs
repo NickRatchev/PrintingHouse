@@ -10,6 +10,7 @@
     using System.Windows.Data;
     using System.Collections.Generic;
     using System.Windows.Input;
+    using System.Linq;
 
     public partial class MainWindow : Window
     {
@@ -18,29 +19,33 @@
         public ObservableCollection<Component> components;
         public ObservableCollection<Order> orders;
 
+        public ICollection<Client> ClientsList;
+
         public MainWindow()
         {
             InitializeComponent();
 
             PrintingHouseDbStore.Initialize();
 
-            // Select tab Orders
-            //tabOrders.IsSelected = true;
-            // Set mouse cursor in filter TextBox
-            //FocusManager.SetFocusedElement(this, txtFilterOrder);
+            ClientsList = PrintingHouseDbStore.GetClients();
+            Clients = new ObservableCollection<Client>(ClientsList.Where(c => c.IsActive == true).ToList());
+            //Clients = new ObservableCollection<Client>(ClientsList);
+            //Clients = new ObservableCollection<Client>(PrintingHouseDbStore.GetClients());
 
-            Clients = new ObservableCollection<Client>(PrintingHouseDbStore.GetClients());
             components = new ObservableCollection<Component>(PrintingHouseDbStore.GetComponents());
             orders = new ObservableCollection<Order>(PrintingHouseDbStore.GetOrders());
-
+            
             listClients.ItemsSource = Clients;
+
             listOrders.ItemsSource = orders;
 
             CollectionView viewClients = (CollectionView)CollectionViewSource.GetDefaultView(listClients.ItemsSource);
             CollectionView viewOrders = (CollectionView)CollectionViewSource.GetDefaultView(listOrders.ItemsSource);
 
-            viewClients.Filter = FilterClient;
+            viewClients.Filter = FilterClientByName;
             viewOrders.Filter = FilterOrder;
+
+            viewClients.Filter = FilterClientByActive;
         }
 
         private void btnAddClient_Click(object sender, RoutedEventArgs e)
@@ -61,7 +66,7 @@
 
         private void btnEditClient_Click(object sender, RoutedEventArgs e)
         {
-            //Button b = sender as Button;
+            Button b = sender as Button;
             Client client = (Client)((Button)e.Source).DataContext;            
 
             ClientDataWindow clientDataWindow = new ClientDataWindow();
@@ -75,10 +80,7 @@
             }
             else
             {
-                MessageBox.Show("Cancel");
-                
-                //CollectionViewSource.GetDefaultView(listClients.ItemsSource).Refresh();
-                //listClients.ItemsSource = Clients;                
+                MessageBox.Show("Cancel");                          
             }
         }
 
@@ -92,7 +94,7 @@
             MessageBox.Show("ToDo");
         }
 
-        private bool FilterClient(object item)
+        private bool FilterClientByName(object item)
         {
             if (string.IsNullOrEmpty(txtFilterClient.Text))
             {
@@ -101,6 +103,18 @@
             else
             {
                 return ((item as Client).CompanyName.IndexOf(txtFilterClient.Text, StringComparison.OrdinalIgnoreCase) >= 0);
+            }
+        }
+
+        private bool FilterClientByActive(object item)
+        {
+            if (!(bool)checkOnlyActive.IsChecked)
+            {
+                return true;
+            }
+            else
+            {
+                return (item as Client).IsActive == true;
             }
         }
 
@@ -184,6 +198,27 @@
             txtBlockWischwasserKg.Text = calculateWischwasserKg + "  kg";
             txtBlockFoilKg.Text = calculateFoilKg + "  kg";
             txtBlockTapeM.Text = calculateTapeMeters + "  m";
+        }
+
+        private void OnFilterActiveClick(object sender, RoutedEventArgs e)
+        {
+            if (!(bool)checkOnlyActive.IsChecked)
+            {
+                Clients = new ObservableCollection<Client>(ClientsList);
+
+                listClients.ItemsSource = Clients;
+                CollectionView viewClients = (CollectionView)CollectionViewSource.GetDefaultView(listClients.ItemsSource);
+                viewClients.Filter = FilterClientByName;                
+                CollectionViewSource.GetDefaultView(listClients.ItemsSource).Refresh();
+            }
+            else
+            {
+                Clients = new ObservableCollection<Client>(ClientsList.Where(c => c.IsActive == true).ToList());
+                listClients.ItemsSource = Clients;
+                CollectionView viewClients = (CollectionView)CollectionViewSource.GetDefaultView(listClients.ItemsSource);
+                viewClients.Filter = FilterClientByName;
+                CollectionViewSource.GetDefaultView(listClients.ItemsSource).Refresh();
+            }
         }
     }
 }
